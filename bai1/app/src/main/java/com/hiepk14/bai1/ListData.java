@@ -1,6 +1,8 @@
 package com.hiepk14.bai1;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -32,11 +34,30 @@ public class ListData extends AppCompatActivity {
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                Toast.makeText(context, db.delete(sinhViens.get(position).getName()) + " ", Toast.LENGTH_SHORT).show();
-                sinhViens.remove(position);
-                adapterCustom.notifyDataSetChanged();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Thong bao");
+                builder.setMessage("Bạn có muốn xoa không?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Huy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                   //     Toast.makeText(ListData.this, "Không thoát được", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(context, db.delete(sinhViens.get(position).getName()) + " ", Toast.LENGTH_SHORT).show();
+                        sinhViens.remove(position);
+                        adapterCustom.notifyDataSetChanged();
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 return false;
             }
         });
